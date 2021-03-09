@@ -5,10 +5,10 @@
 # Route-Test-in-Javascript
  Route through a table with n rows and n columns.
  
-#Requirements
+# Requirements
 Open ejercicio1.html with 
 - Google Chrome
 - Mozilla.
 
-#Notes
+# Notes
 - Its operation with other browsers is not guaranteed.
