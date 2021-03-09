@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Lógica</title>
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+    <script src="js/jquery-1.12.4.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script type="text/javascript" language="javascript" src="js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap-dialog.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-dialog.min.css" />
+    <!--CSS para colore de título y campos-->
+    <style type="text/css">
+        .body{
+           background: #D5D8DC;
+        }
+        .text-header {
+            padding: 2px 16px;
+            background-color: #428bca;
+            color: white;
+        }
+        .scrolleddiv{
+            position: fixed;
+            top: 270px;
+            bottom: 70px;
+            overflow-y: scroll;
+        }
+        .scrolleddivruta{
+            position: fixed;
+            top: 130px;
+            bottom: 120px;
+            overflow-y: scroll;
+        }
+        .divmodalfijo{
+            position: relative;
+        }
+        .modal-lg {
+            padding-bottom: 30px;
+        }
+
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+            .row.content {height: auto;}
+        }
+        
+        #contenidoEjercicio{
+            padding: 2px 16px;
+        }
+        #tituloEjercicio{
+            color: #FFBB33
+        }
+        #indicacionesEjercicio{
+            color: #3358FF;
+            font-weight: bold;
+        }
+        #notasEjercicio {   
+            color: #0B0B61;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="contenidoEjercicio">
+        <h2 id="tituloEjercicio">Ejercicio # 1</h2>
+        <p id="indicacionesEjercicio">Ingrese un número para las filas y un número para las columnas.</p>
+
+        <form action="/action_page.php">
+          <label for="fieldrows">Número de filas:</label><br>
+          <input type="text" id="txtfilas" name="txtfilas" placeholder="Ingrese un número"><br>
+          <label for="fieldcols">Número de columnas:</label><br>
+          <input type="text" id="txtcols" name="txtcols" placeholder="Ingrese un número"><br><br>
+        </form>
+
+        <p id="notasEjercicio" name="notasEjercicio">Nota: El número para filas y columnas debe ser mayor a cero.</p>
+        <button type="button" id="startProof" class="btn btn-success">Run Test</button>    
+    </div>
+<script type="text/javascript">
+    /** Detect when user key press enter on txtfilas */
+    $(document).keyup(function (e) {
+        if ($(".txtfilas:focus") && (e.keyCode === 13)) {
+            //alert('Enter was detect')
+            getfocus();
+        }
+    });
+
+    /** Set focus on cols inputText */
+    function getfocus() {
+        $('#txtcols').val('');
+        document.getElementById("txtcols").focus();
+    }
+    var btnEmpezarTest = document.getElementById("startProof");
+    btnEmpezarTest.onclick = function() {
+        routes();
+    }
+</script>
+
+<script type="text/javascript">
+function routes(){
+    var validationPassed=0;//contador para validar valores de entrada en el número de filasy columnas
+    //falta validar campo vacio y numero mayor a cero y limites
+    var numfilas=$('#txtfilas').val();
+    var numcolumnas=$('#txtcols').val();
+    
+    if(numfilas === "" || numfilas<=0){
+        messagefail('No deje el campo filas vacio y escriba valores mayores a cero');
+    }else{
+        validationPassed++;
+    }
+    if(numcolumnas === "" || numcolumnas<=0){
+        messagefail('No deje el campo columnas vacio y escriba valores mayores a cero');
+    }else{
+        validationPassed++;
+    }
+    
+    if(validationPassed==2){
+        var  filas  = parseInt(numfilas);//3;
+        var  columnas = parseInt(numcolumnas);//3;
+        console.log('Test de '+filas+' x '+columnas);
+        
+        var totalPlazas=filas*columnas;
+        var plazaOcupada=1;
+
+        var columnaMinima = 0;
+        var columnaMaxima = columnas - 1;
+        var columnaAhora = columnaMinima;
+
+        var filaMinima = 0;
+        var filaMaxima = filas - 1;
+        var filaAhora = filaMinima;
+
+        var derecha = true;
+        var arriba = true;
+        var avanza = true;
+
+        var fila = 0;
+        var columna = 0;
+
+        /*
+        caso 1 hacia la derecha
+        caso 2 hacia abajo
+        caso 3 hacia la izquierda
+        caso 4 hacia arriba
+        */
+
+        var caso = 1;//Empieza el recorrido a la derecha
+        var routeString='';//Concatena las plazas visitadas.
+
+        console.log('('+ fila + ','+ columna + ')');
+        //Entonces solo se queda en la fila 1 y columna 1 está mirando a la derecha L
+        if(totalPlazas==1){
+            routeString = '('+ fila + ','+ columna + ') ->  R  está mirando a la derecha';
+        }else{//Continua recorrido
+            routeString = '('+ fila + ','+ columna + ') ->';
+        }
+        while (avanza) {
+            switch (caso) { 
+                //Caso 1
+                case 1: 
+                    while (columna < columnaMaxima) {
+                            columna++;
+                            console.log('('+ fila + ','+ columna + ')');
+                            plazaOcupada++;
+                            if(plazaOcupada==totalPlazas){
+                                routeString=routeString+' ('+ fila + ','+ columna + ')  R  está mirando a la derecha';
+                            }else{
+                                routeString=routeString+' ('+ fila + ','+ columna + ') ->';
+                            }
+                        }
+                        filaMinima++;
+                        caso = 2;
+                        if(plazaOcupada==totalPlazas){
+                            avanza=false;
+                        }
+                    break 
+                //Caso 2
+                case 2: 
+                    while (fila < filaMaxima) {
+                            fila++;
+                            console.log('('+ fila + ','+ columna + ')');
+                            plazaOcupada++;
+                            if(plazaOcupada==totalPlazas){
+                                routeString=routeString+' ('+ fila + ','+ columna + ')  D  está mirando para abajo';                            
+                            }else{
+                                routeString=routeString+' ('+ fila + ','+ columna + ') ->';
+                            }
+                        }
+                        columnaMaxima--;
+                        caso = 3;
+                        if(plazaOcupada==totalPlazas){
+                            avanza=false;
+                        }
+                    break
+                //Caso 3 
+                case 3: 
+                    while (columna > columnaMinima) {
+                            columna--;
+                            console.log('('+ fila + ','+ columna + ')');                        
+                            plazaOcupada++;
+                            if(plazaOcupada==totalPlazas){
+                                routeString=routeString+' ('+ fila + ','+ columna + ')  L  está mirando a la izquierda'                            
+                            }else{
+                                routeString=routeString+' ('+ fila + ','+ columna + ') ->';
+                            }
+                        }
+                        filaMaxima--;
+                        caso = 4;
+                        if(plazaOcupada==totalPlazas){
+                            avanza=false;
+                        }
+                    break
+                //Caso 4
+                case 4:
+                    while (fila > filaMinima) {
+                            fila--;
+                            console.log('('+ fila + ','+ columna + ')');                        
+                            plazaOcupada++;
+                            if(plazaOcupada==totalPlazas){
+                                routeString=routeString+' ('+ fila + ','+ columna + ')  U  está mirando para arriba';                            
+                            }else{
+                                routeString=routeString+' ('+ fila + ','+ columna + ') ->';
+                            }
+                        }
+                        columnaMinima++;
+                        caso = 1;
+                        if(plazaOcupada==totalPlazas){
+                            avanza=false;
+                        }
+                    break 
+                default: 
+                    //caso desconocido
+            }
+        }
+        columnaAhora = columna;
+        filaAhora = fila;
+        //Notificamos al usuario que el test se realizó.
+        alert('Test finalizado exitósamente\n'+'Test de '+filas+' x '+columnas+'\nLa ruta seguida fué '+routeString);
+        console.log('Test finalizado exitósamente\nLa ruta seguida fué '+routeString);
+    }
+}
+/** Función para notificar al usuario que no pasó la validación para las filas y columnas. (Modal rojo) */
+    function messagefail(messageToShow){
+        var titlefail = 'Test Algorithm';
+        var msgfail = messageToShow;
+        var dialogError = new BootstrapDialog({
+            title: titlefail,
+            message: msgfail
+        });
+        dialogError.realize();
+        dialogError.getModalHeader().css('background-color', '#dc3545');
+        dialogError.getModalBody().css('background-color', '#ffffff');
+        dialogError.getModalFooter().css('background-color', '#dc3545');
+        dialogError.open();
+    }
+</script>
+</body>
+</html>
+
